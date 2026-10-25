@@ -1,0 +1,168 @@
+# ==============================================================================
+# Global Environment Variables (injected into each container at runtime)
+# ==============================================================================
+[env_vars]
+HF_ENDPOINT="https://hf-mirror.com"
+HF_TOKEN="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"
+GITHUB_TOKEN=""
+
+# ==============================================================================
+# DataPipeline Configuration
+# ==============================================================================
+
+# LLM Basic Configuration
+[llm_config]
+llm_name="deepseek/deepseek-v4-flash" # e.g., "azure-gpt-5-fy0828" / "local"
+llm_temperature=0.0
+llm_max_tokens=65536    # Maximum output tokens (-1 = no limit)
+timeout=180
+
+[llm.azure-gpt-5-fy0828]
+model = "azure/gpt-5-fy0828"
+api_key = "<YOUR_API_KEY>"
+base_url = "https://api.chatanywhere.com.cn/v1"
+
+[llm.claude-sonnet-4-20250514]
+model = "claude-sonnet-4-20250514"
+api_key = ""
+base_url = [
+    "",
+    "",
+]
+
+[llm.local]
+backend = "vllm"                                     # Backend type: vllm
+api_key = ""                                         # Optional: API key passed to vLLM server
+base_url = "http://localhost:8080/v1"                # vLLM server URL
+
+# ==============================================================================
+# Inference Agent Configuration
+# ==============================================================================
+
+# Inference runtime settings
+[infer]
+# Optional: Host cache directory for agent downloads; will be mounted to /download inside containers
+# Set to empty to disable cache mount (each container will re-download/install)
+# Use an absolute path here
+download_cache_dir="/path/to/FeatureBench/download_cache"
+
+# OpenHands Agent Configuration
+[infer_config.openhands]
+# Required: LLM API Key (supports OpenAI/Anthropic/Azure, etc.)
+# Optional: LLM API Base URL
+# LLM_API_KEY = "<YOUR_API_KEY>"
+# LLM_BASE_URL = "https://api.deepseek.com"
+# LLM_REASONING_EFFORT = "max"
+
+
+
+LLM_API_KEY = "<YOUR_API_KEY>"
+LLM_BASE_URL = "https://api.chatanywhere.com.cn/v1"
+LLM_REASONING_EFFORT = "medium"
+
+# LLM_API_KEY = "<YOUR_API_KEY>"
+# LLM_BASE_URL = "https://api.zhizengzeng.com/v1"
+# LLM_REASONING_EFFORT = "medium"
+# Optional: Lock OpenHands version (leave empty to use latest)
+OPENHANDS_VERSION = "0.62.0"
+# Optional: Reasoning effort for OpenAI o-series models
+# LLM_REASONING_EFFORT = "high"
+# Optional: Disable DeepSeek thinking mode. Set to "true"/"1"/"yes" to disable.
+# When disabled, the model skips the reasoning chain step entirely.
+# When enabled (default), LLM_REASONING_EFFORT controls the reasoning effort level.
+LLM_DISABLE_THINKING = "false"
+# Azure API Version (required for Azure models only)
+LLM_API_VERSION = ""
+# Optional: OpenHands agent max iterations (step limit). Upstream default is 500.
+OPENHANDS_MAX_ITERATIONS = ""
+# Optional: Save llm completions if true
+SAVE_COMPLETIONS = false
+# Optional: Enable OpenHands condensation (default false). Set true to enable condensers.
+ENABLE_CONDENSER = false
+# Optional: Render infer.log mode (compact|full)
+INFER_LOG_RENDER_MODE = "full"
+
+# OpenHands Architecture Monitor Agent Configuration
+# Inherits [infer_config.openhands]. Keep OPENHANDS_VERSION empty so the SDK-based
+# architecture monitor can register its custom tree_sitter_static_analysis tool.
+[infer_config.openhands_archmon]
+OPENHANDS_VERSION = ""
+# Optional host path for the Architecture Monitor source. Empty uses ../Agent/openhands.
+ARCHMON_HOST_SOURCE_DIR = ""
+
+# Claude Code Agent Configuration
+[infer_config.claude_code]
+# Required: Anthropic API Key
+ANTHROPIC_API_KEY = "<YOUR_API_KEY>"
+# Optional: Custom API Base URL
+ANTHROPIC_BASE_URL = "https://api.deepseek.com/anthropic"
+# Optional: Lock Claude Code version (leave empty to use latest)
+CLAUDE_CODE_VERSION = "2.1.150"
+# Optional: Claude Code thinking/effort level.
+CLAUDE_CODE_EFFORT_LEVEL = "max"
+# Optional: Claude Code maximum turns.
+CLAUDE_CODE_MAX_TURNS = "200"
+# Optional: Capability override for Anthropic-compatible gateways/non-standard model names.
+CLAUDE_CODE_MODEL_SUPPORTED_CAPABILITIES = "effort,xhigh_effort,max_effort,thinking,adaptive_thinking,interleaved_thinking"
+
+# Gemini CLI Agent Configuration
+[infer_config.gemini_cli]
+GEMINI_API_KEY = ""
+GOOGLE_GEMINI_BASE_URL = ""
+# Optional: Lock Gemini CLI version (leave empty to use latest)
+GEMINI_CLI_VERSION = ""
+
+# Codex Agent Configuration (Azure OpenAI supported)
+[infer_config.codex]
+# Required: OpenAI API Key
+OPENAI_API_KEY = "<YOUR_API_KEY>"
+# Optional: Custom API Base URL
+OPENAI_BASE_URL = "https://api.chatanywhere.com.cn/v1"
+# Optional: Reasoning effort level for Codex reasoning models; empty defaults to "medium"
+CODEX_REASONING_EFFORT = "medium"
+# Optional: Lock Codex version (leave empty to use latest)
+CODEX_VERSION = ""
+
+
+# mini_swe_agent Configuration
+[infer_config.mini_swe_agent]
+# Required: Unified mini_swe_agent API key
+# MSWEA_API_KEY = "ark-923a775c-4564-4853-92e6-f5777f2d8e8c-92a83"
+# Optional: Base URL passed through to provider envs
+# MSWEA_BASE_URL = "https://ark.cn-beijing.volces.com/api/coding/v3"
+# MSWEA_API_KEY = "<YOUR_API_KEY>"
+MSWEA_BASE_URL = "https://api.deepseek.com"
+MSWEA_API_KEY = "<YOUR_API_KEY>"
+# MSWEA_API_KEY = "<YOUR_API_KEY>"
+# MSWEA_BASE_URL = "https://api.zhizengzeng.com/v1/"
+# MSWEA_API_KEY = "<YOUR_API_KEY>"
+# MSWEA_BASE_URL = "https://api.chatanywhere.com.cn/v1"
+# Optional: Cost tracking mode (default behavior in FB adapter is ignore_errors)
+MSWEA_COST_TRACKING = ""
+# Optional: Lock mini_swe_agent version (leave empty to use latest)
+MINI_SWE_AGENT_VERSION = ""
+MSWEA_REASONING_EFFORT = "max"
+
+# Architecture-aware mini-swe-agent.
+# Inherits [infer_config.mini_swe_agent]. Empty source path uses ../Agent/arch_agent_mini_swe.
+[infer_config.arch_swe_agent]
+ARCH_SWE_AGENT_HOST_SOURCE_DIR = ""
+
+# Simplified architecture-aware mini-swe-agent.
+# Inherits [infer_config.mini_swe_agent] and [infer_config.arch_swe_agent].
+[infer_config.arch_swe_agent_simple]
+ARCH_SWE_AGENT_HOST_SOURCE_DIR = ""
+
+# CodeSpec2: repository-grounded specification and implementation.
+# Empty source path mounts the sibling Agent directory, which contains codespec2
+# and the reference mini-swe packages it imports.
+[infer_config.codespec2]
+CODESPEC2_HOST_SOURCE_DIR = ""
+CODESPEC2_SPEC_AGENT_ITERS = "300"
+
+# Controlled experiment: reuse CodeSpec2 artifacts from a fixed run and execute
+# only the unchanged implementation stage with the selected model endpoint.
+[infer_config.codespec2_implement_replay]
+CODESPEC2_HOST_SOURCE_DIR = ""
+CODESPEC2_REPLAY_SOURCE_RUN = "/home/wpd/workspace/FeatureBench/FeatureBench/runs/codespec2_sample/2026-08-12__22-31-43"
+CODESPEC2_REPLAY_MAX_ITERS = "300"
